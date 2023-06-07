@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
+
+
 typedef struct{
     int value;
     void *next;
 } Node;
-
 
 void printNode(Node *node) {
     printf("{\n");
@@ -15,13 +17,17 @@ void printNode(Node *node) {
     printf("}\n");
 }
 
-void printList(Node *node) {
-    printNode(node);
-    if(node->next == NULL){
-        return;
+
+void printList(Node *node, bool asStruct) {
+    while(node != NULL) {
+        if (asStruct) {
+            printNode(node);
+        } else {
+            printf("%d->", node->value);
+        }
+        node = node->next;
     }
-    node = node->next;
-    printList(node);
+    printf("\n");
 }
 
 Node* createNode(int value) {
@@ -41,24 +47,27 @@ Node* addNode(Node *head, int value) {
 }
 
 Node* findElement(Node *node, int value) {
-    if(node->value == value){
-        return node;
+    Node *current = node;
+    while(current != NULL){
+        if(current->value == value) {
+            return current;
+        }
+        current = current->next;
     }
-
-    if(node->next == NULL) {
-        return NULL;
-    }
-
-    findElement(node->next, value);
+    return NULL;
 }
 
 Node* appendNode(Node *node, int value){
-    if(node->next == NULL){
-        Node* newNode = createNode(value);
-        node->next = newNode;
-        return newNode;
+    Node* newNode = createNode(value);
+    while(node != NULL) {
+       if(node->next == NULL){
+            node->next = newNode;
+            return newNode;
+       }
+        node = node->next;
     }
-    appendNode(node->next, value);
+
+    return newNode;
 }
 
 void linkedListCollector(Node *head) {
@@ -82,24 +91,26 @@ bool deleteNode(Node *head, Node *node) {
     return false;
 }
 
-int linkedListLength(Node *head, int count) {
-    count++;
-    if(head->next == NULL) {
-        return count;
+int linkedListLength(Node *head) {
+   Node *current = head;
+   int count = 0;
+    
+   while(current != NULL) {
+        printNode(current);
+        current = current->next;
+        count++;
     }
 
-    linkedListLength(head->next, count);
-}
+   return count;
 
+}
 
 int main() {
     Node* head = createNode(1);
-    Node* node2 = appendNode(head, 2);
-    Node* node3 = appendNode(head, 3);
-    Node* node4 = appendNode(head, 4);
-    printList(head);
-    deleteNode(head, node3);
-    printf("====================================================================");
-    printList(head);
+    Node* node1 = addNode(head, 2);
+    Node* node2 = addNode(head, 3);
+    Node * node3 = appendNode(head, 4);
+    printList(head, false);
     linkedListCollector(head);
+    return 0;
 }
