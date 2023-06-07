@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
-
-
 typedef struct{
     int value;
     void *next;
@@ -59,14 +56,12 @@ Node* findElement(Node *node, int value) {
 
 Node* appendNode(Node *node, int value){
     Node* newNode = createNode(value);
-    while(node != NULL) {
-       if(node->next == NULL){
-            node->next = newNode;
-            return newNode;
-       }
+    while(node->next != NULL) {
         node = node->next;
     }
+    printNode(node);
 
+    node->next = newNode;
     return newNode;
 }
 
@@ -80,14 +75,14 @@ void linkedListCollector(Node *head) {
     free(head);
 }
 
-bool deleteNode(Node *head, Node *node) {
-    if(head->next == node) {
-        head->next = node->next;
-        free(node);
-        return true;
+bool deleteNode(Node *currentNode, Node *node) {
+    while (currentNode != NULL) {
+        if(currentNode->next == node){
+            currentNode->next = node->next;
+            return true;
+        }
+        currentNode = currentNode->next;
     }
-    
-    deleteNode(head->next, node);
     return false;
 }
 
@@ -110,7 +105,8 @@ int main() {
     Node* node1 = addNode(head, 2);
     Node* node2 = addNode(head, 3);
     Node * node3 = appendNode(head, 4);
-    printList(head, false);
+    int count = linkedListLength(head);
+    printf("==== %d", count);
     linkedListCollector(head);
     return 0;
 }
