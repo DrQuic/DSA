@@ -116,31 +116,56 @@ void swapNodeValues(Node* node1, Node* node2) {
 }
 
 
-Node* partition(Node* head, Node* tail) {
-    Node* minHead = head;
-    Node* prev = head;
-    while(head != NULL){
-       if (head->value < tail->value) {
-           swapNodeValues(minHead, head);
-           prev = minHead; 
-           minHead = minHead->next;
+Node* partition(Node* node, Node* tail) {
+    if(node == NULL || tail == NULL) return NULL;
+    Node* indexNode = node;
+    Node* prevNode = node;
+    while(node != NULL){
+       if (node->value < tail->value) {
+           if(node->value != indexNode->value){
+               swapNodeValues(indexNode, node); 
+           }
+           prevNode = indexNode; 
+           indexNode = indexNode->next;
        }
-       head = head->next;
+       node = node->next;
     }
 
-    swapNodeValues(minHead->next, tail);
-    return prev;
+    swapNodeValues(indexNode, tail);
+    return prevNode;
+}
+
+Node* isQuicksortOver(Node* start, Node* target) {
+    Node *current = start;
+    while(current != NULL){
+        if(current == target) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}       
+
+void quickSort(Node* node, Node* tail){
+    if(isQuicksortOver(tail, node)) return;
+    Node* prevNode = partition(node, tail);
+    if(prevNode == NULL) return;
+    Node* nodeIndex = prevNode->next;
+    quickSort(nodeIndex->next, tail);
+    quickSort(node, prevNode);
+       
 }
 
 
 int main() {
     Node* head = createNode(10);
-    Node* node1 = appendNode(head, 80);
-    Node* node2 = appendNode(head, 30);
-    Node* node3 = appendNode(head, 90);
-    Node* node4 = appendNode(head, 40);
+    Node* node1 = appendNode(head, 7);
+    Node* node2 = appendNode(head, 8);
+    Node* node3 = appendNode(head, 9);
+    Node* node4 = appendNode(head, 1);
+    Node* node5 = appendNode(head, 5);
     printList(head, false);
-    partition(head, node4);
+    quickSort(head, node5);
     printList(head, false);
     linkedListCollector(head);
     return 0;
