@@ -36,8 +36,9 @@ void printarray(int arr[], int size) {
 };
 
 int main() {
-    int test_array[] = {1, 40, 80, 100, 4, 9};
-    quick_sort(test_array, 0, 5);
+    //10->30->80->90->40->
+    int test_array[] = {10, 80, 30, 90, 40};
+    partition(test_array, 0, 5);
     printarray(test_array, *(&test_array + 1) - test_array);
     return 0;
 }

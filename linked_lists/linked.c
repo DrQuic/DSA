@@ -59,8 +59,6 @@ Node* appendNode(Node *node, int value){
     while(node->next != NULL) {
         node = node->next;
     }
-    printNode(node);
-
     node->next = newNode;
     return newNode;
 }
@@ -68,6 +66,7 @@ Node* appendNode(Node *node, int value){
 void linkedListCollector(Node *head) {
     if(head->next == NULL) {
         free(head);
+
         return;
     }
     
@@ -91,7 +90,6 @@ int linkedListLength(Node *head) {
    int count = 0;
     
    while(current != NULL) {
-        printNode(current);
         current = current->next;
         count++;
     }
@@ -100,13 +98,50 @@ int linkedListLength(Node *head) {
 
 }
 
+Node* reverse(Node *node) {
+   Node* prev = NULL;
+   while(node != NULL) {
+        Node* nextTemp = node->next;
+        node->next = prev;
+        prev = node;
+        node = nextTemp;
+   }
+   return prev;
+}
+
+void swapNodeValues(Node* node1, Node* node2) {
+   int nodeValue = node1->value;
+   node1->value = node2->value;
+   node2->value = nodeValue;
+}
+
+
+Node* partition(Node* head, Node* tail) {
+    Node* minHead = head;
+    Node* prev = head;
+    while(head != NULL){
+       if (head->value < tail->value) {
+           swapNodeValues(minHead, head);
+           prev = minHead; 
+           minHead = minHead->next;
+       }
+       head = head->next;
+    }
+
+    swapNodeValues(minHead->next, tail);
+    return prev;
+}
+
+
 int main() {
-    Node* head = createNode(1);
-    Node* node1 = addNode(head, 2);
-    Node* node2 = addNode(head, 3);
-    Node * node3 = appendNode(head, 4);
-    int count = linkedListLength(head);
-    printf("==== %d", count);
+    Node* head = createNode(10);
+    Node* node1 = appendNode(head, 80);
+    Node* node2 = appendNode(head, 30);
+    Node* node3 = appendNode(head, 90);
+    Node* node4 = appendNode(head, 40);
+    printList(head, false);
+    partition(head, node4);
+    printList(head, false);
     linkedListCollector(head);
     return 0;
 }
